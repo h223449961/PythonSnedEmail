@@ -1,0 +1,22 @@
+# -*- coding: utf-8 -*-
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+from email.mime.application import MIMEApplication#傳送附件
+import smtplib
+content = MIMEMultipart()  #建立MIMEMultipart物件
+content["subject"] = "python email"  #郵件標題
+content["from"] = "h223449961@gmail.com"  #寄件者
+content["to"] = "h223449961@gmail.com" #收件者
+content.attach(MIMEText("python send a email to gmail"))
+part_attach1 = MIMEApplication(open('3003.xlsx','rb').read())   #開啟附件
+part_attach1.add_header('Content-Disposition','attachment',filename='附件.xlsx') #為附件命名
+content.attach(part_attach1)
+with smtplib.SMTP(host="smtp.gmail.com", port="587") as smtp:  # 設定SMTP伺服器
+ try:
+  smtp.ehlo()  # 驗證SMTP伺服器
+  smtp.starttls()  # 建立加密傳輸
+  smtp.login("h223449961@gmail.com", "khgtlirbsyhjgxoi")  # 登入寄件者gmail
+  smtp.send_message(content)  # 寄送郵件
+  print("Complete!")
+ except Exception as e:
+  print("Error message: ", e)
